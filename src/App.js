@@ -89,6 +89,17 @@ export default function Page() {
     setQuantity(1);
   };
 
+  // Currency formatter
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-GH', {
+      style: 'currency',
+      currency: 'GHS',
+      minimumFractionDigits: 2,  // Always show 2 decimal places
+      maximumFractionDigits: 2,  // Maximum of 2 decimal places
+      useGrouping: true          // This enables the thousand separators
+    }).format(amount)
+  }
+
 
 
   return (
@@ -201,7 +212,10 @@ export default function Page() {
               label="Total Sales"
               value={<>
                 <span className="text-gray-500 text-xl font-medium">GH₵ </span>
-                {Number(stats.sales).toFixed(2)}
+                {Number(stats.sales).toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}
               </>}
             />
             <StatsCard 

@@ -76,7 +76,10 @@ export function TableDemo({ setStats }) {
     const formatCurrency = (amount) => {
       return new Intl.NumberFormat('en-GH', {
         style: 'currency',
-        currency: 'GHS'
+        currency: 'GHS',
+        minimumFractionDigits: 2,  // Always show 2 decimal places
+        maximumFractionDigits: 2,  // Maximum of 2 decimal places
+        useGrouping: true          // This enables the thousand separators
       }).format(amount)
     }
   
