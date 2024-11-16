@@ -1,4 +1,4 @@
-import * as React from "react"
+import { cn } from "../../lib/utils"
 
 import { GalleryVerticalEnd, LineChart, PackageSearch, LayoutGrid, BarChart3, ShieldCheck } from "lucide-react"
 
@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "../components/ui/sidebar"
+} from "./sidebar"
 
 // This is sample data.
 const data = {
@@ -85,15 +85,28 @@ export function AppSidebar({
         {/* We create a SidebarGroup for each parent. */}
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive} className={`text-base py-5 ${item.isActive ? 'bg-teal-500' : 'hover:bg-teal-100'}`}>
-                      <a href={item.url}>
-                        <item.icon className="w-8 h-8"/>
-                        <span> {item.title} </span>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      asChild 
+                      isActive={item.isActive} 
+                      className={cn(
+                        "text-base py-6 px-4 w-full justify-start transition-all duration-150",
+
+                        // Override the default active state colors
+                        "data-[active=true]:bg-teal-300 data-[active=true]:text-black hover:bg-neutral-200",
+                        "[&_svg]:!w-6 [&_svg]:!h-6",
+
+                        // Explicitly set styles for collapsed state
+                        "group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:justify-center"
+                      )}
+                      >
+                      <a href={item.url} className="flex w-full items-center group-data-[collapsible=icon]:justify-center">
+                        <item.icon className="group-data-[collapsible=icon]:mx-auto" />
+                        <span className="ml-1 group-data-[collapsible=icon]:hidden">{item.title}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

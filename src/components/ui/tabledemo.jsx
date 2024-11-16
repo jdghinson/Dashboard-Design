@@ -51,7 +51,7 @@ export function TableDemo({ setStats }) {
         time: "11:30 am",
         itemName: "Women's loungewear",
         quantity: 9,
-        unitPrice: 61.11,
+        unitPrice: 60.00,
         category: "--",
         paymentMethod: "Cash",
       },
@@ -87,18 +87,23 @@ export function TableDemo({ setStats }) {
         );
     }, []);
 
+    // Calculate total number of items sold
     const totalItems = React.useMemo(() => {
         return invoices.reduce((sum, invoice) => 
           sum + invoice.quantity, 0
         );
     }, []);
 
+     // Add this to calculate number of entries
+     const totalEntries = invoices.length;
+
     useEffect(() => {
         if (typeof setStats === 'function') {  // Add this check
           setStats(prev => ({
             ...prev,
             sales: Number(totalAmount.toFixed(2)),
-            items: totalItems
+            items: totalItems,
+            entries: totalEntries
           }));
         }
     }, [totalAmount, setStats]);
@@ -107,7 +112,6 @@ export function TableDemo({ setStats }) {
     return (
 
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Time</TableHead>

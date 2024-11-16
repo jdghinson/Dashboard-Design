@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AppSidebar } from "./components/app-sidebar"
+import { AppSidebar } from "./components/ui/app-sidebar"
 import {
   ChevronDown,
   UserCircle2,
@@ -64,7 +64,8 @@ export default function Page() {
     const [isLoading, setIsLoading] = useState(true);
     const [stats, setStats] = useState({
       sales: 0.00,
-      items: 10
+      items: 10,
+      entries: 0
     });
   
   useEffect(() => {
@@ -88,20 +89,13 @@ export default function Page() {
     setQuantity(1);
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-GH', {
-      style: 'currency',
-      currency: 'GHS'
-    }).format(amount)
-  }
-
 
 
   return (
     (<SidebarProvider>
       <AppSidebar />
       <SidebarInset className="bg-muted/50">
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4 bg-white">
+        <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4 bg-white">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
            <div className="flex items-center w-full justify-between py-4">
@@ -132,7 +126,9 @@ export default function Page() {
           </div>
           
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+
+        {/* Main Content */}
+        <div className="flex flex-1 flex-col gap-0 p-6">
 
         {/* Using Modal */}
           <div className="flex items-center justify-between mb-6">
@@ -165,7 +161,7 @@ export default function Page() {
                     value={itemName}
                     onChange={(e) => setItemName(e.target.value)}
                     placeholder="Enter item name"
-                    className="input-field mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                    className="input-field mt-1 block w-full rounded-md border-gray-300 shadow-sm focus-visible:ring-teal-500"
                   />
                 </div>
                 
@@ -176,7 +172,7 @@ export default function Page() {
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                     min="1"
-                    className="input-field mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                    className="input-field mt-1 block w-full rounded-md border-gray-300 shadow-sm focus-visible:ring-teal-500"
                   />
                 </div>
                 
@@ -199,15 +195,13 @@ export default function Page() {
             </Dialog>
           </div>
 
-          
-          
           <div className="grid auto-rows-min gap-4 md:grid-cols-2">
             <StatsCard
               isLoading={isLoading}
               label="Total Sales"
               value={<>
                 <span className="text-gray-500 text-xl font-medium">GH₵ </span>
-                {stats.sales}
+                {Number(stats.sales).toFixed(2)}
               </>}
             />
             <StatsCard 
@@ -219,6 +213,27 @@ export default function Page() {
           <div className="min-h-[100vh] flex-1 rounded-xl bg-white md:min-h-min p-6 mt-8">
             <h1 className="mb-6 mt-2 text-xl font-medium text-neutral-700">Transaction Details</h1>
             <TableDemo setStats={setStats}/>
+            <div className="flex items-center justify-end space-x-2 py-4 pl-4">
+              <div className="flex-1 text-sm text-muted-foreground">
+                {stats.entries} entries made.
+              </div>
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled="true"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled="true"
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
           </div>
           
         </div>
