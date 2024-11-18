@@ -114,11 +114,6 @@ const InventorySalesDialog = ({ onSale }) => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Sell items</h2>
-        <p className="text-sm text-gray-500">Add your sold items</p>
-      </div>
-
       <div className="relative">
         <Input
             className="focus-visible:ring-teal-500 py-6"

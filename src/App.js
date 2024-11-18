@@ -157,7 +157,7 @@ export default function Page() {
               </SheetTrigger>
               
               <SheetContent className="w-full sm:w-[75%] md:w-[70%] lg:w-[65%] sm:max-w-full">
-                <SheetHeader className="mb-4">
+                <SheetHeader className="mb-10">
                   <SheetTitle>Sell Item</SheetTitle>
                   <SheetDescription>
                     Enter the item details to record a sale.
