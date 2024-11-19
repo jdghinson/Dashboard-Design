@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label"
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Trash2 } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -188,12 +188,22 @@ const InventorySalesDialog = ({ onSale }) => {
                 size="icon"
                 className="h-8 w-8"
                 onClick={() => updateQuantity(item.id, 1)}
-              >
+                >
                 <Plus className="h-4 w-4" />
               </Button>
               <div className="w-28 text-right">
                 GH₵{(item.quantity * item.unitPrice).toFixed(2)}
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-red-50 hover:text-red-500"
+                onClick={() => {
+                  setSelectedItems(items => items.filter(i => i.id !== item.id));
+                }}
+                >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         ))}
@@ -212,9 +222,9 @@ const InventorySalesDialog = ({ onSale }) => {
                 <SelectTrigger className="w-full py-6 focus:ring-teal-500">
                   <SelectValue placeholder="Select payment method" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent >
                   {paymentMethods.map((method) => (
-                    <SelectItem key={method.id} value={method.id}>
+                    <SelectItem key={method.id} value={method.id} className="px-3 py-3">
                       {method.name}
                     </SelectItem>
                   ))}
