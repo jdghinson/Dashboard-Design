@@ -2,14 +2,8 @@ import React, { useState } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label"
-import { Plus, Minus, Trash2 } from "lucide-react";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "./select";
+import { Plus, Minus, Trash2, CreditCard, Smartphone, Banknote, Building2 } from "lucide-react";
+
 
 // Sample inventory data
 const inventoryData = [
@@ -45,32 +39,76 @@ const inventoryData = [
   }
 ];
 
-// Payment methods
+// Updated payment methods with icons
 const paymentMethods = [
-    { id: "credit-card", name: "Credit Card" },
-    { id: "momo", name: "Mobile Money" },
-    { id: "cash", name: "Physical Cash" },
-    { id: "bank-transfer", name: "Bank Transfer" }
+  { 
+    id: "credit-card", 
+    name: "Credit Card",
+    icon: CreditCard
+  },
+  { 
+    id: "momo", 
+    name: "Mobile Money",
+    icon: Smartphone
+  },
+  { 
+    id: "cash", 
+    name: "Physical Cash",
+    icon: Banknote
+  },
+  { 
+    id: "bank-transfer", 
+    name: "Bank Transfer",
+    icon: Building2
+  }
 ];
 
-const InventorySalesDialog = ({ onSale }) => {
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showResults, setShowResults] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("");
+// Component for individual payment method cards
+const PaymentMethodCard = ({ method, selected, onSelect }) => {
+const Icon = method.icon;
+return (
+  <button
+    type="button"
+    onClick={() => onSelect(method.id)}
+    className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all
+      ${selected 
+        ? 'border-slate-600 bg-slate-700 text-slate-50' 
+        : 'border-slate-200 hover:border-slate-700 hover:bg-gray-50'
+      }
+    `}
+  >
+    <Icon className={`h-6 w-6 mb-2 ${selected ? 'text-slate-50' : 'text-gray-600'}`} />
+    <span className={`text-sm font-medium ${selected ? 'text-slate-50' : 'text-gray-700'}`}>
+      {method.name}
+    </span>
+  </button>
+);
+};
 
+
+// Main sales dialog component
+const InventorySalesDialog = ({ onSale }) => {
+  const [selectedItems, setSelectedItems] = useState([]); // Tracks items in cart
+  const [searchTerm, setSearchTerm] = useState(""); // Tracks search input
+  const [showResults, setShowResults] = useState(false); // Controls search results visibility
+  const [paymentMethod, setPaymentMethod] = useState(""); // Tracks selected payment method
+
+
+  // Filter inventory items based on search term and already selected items
   const filteredItems = inventoryData
     .filter(item => 
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !selectedItems.some(selected => selected.id === item.id)
     );
 
+  // Handler for adding an item to the cart
   const handleAddItem = (item) => {
     setSelectedItems([...selectedItems, { ...item, quantity: 1 }]);
     setSearchTerm("");
     setShowResults(false);
   };
 
+  // Handler for updating item quantities
   const updateQuantity = (itemId, increment) => {
     setSelectedItems(items =>
       items.map(item => {
@@ -86,10 +124,12 @@ const InventorySalesDialog = ({ onSale }) => {
     );
   };
 
+  // Calculate total amount for all items in cart
   const totalAmount = selectedItems.reduce((sum, item) => 
     sum + (item.quantity * item.unitPrice), 0
   );
 
+  // Handler for completing the sale
   const handleSale = () => {
     if (selectedItems.length === 0) return;
     if (!paymentMethod) {
@@ -97,6 +137,7 @@ const InventorySalesDialog = ({ onSale }) => {
       return;
     }
     
+    // Prepare sale data
     onSale({
       items: selectedItems,
       totalAmount,
@@ -108,12 +149,14 @@ const InventorySalesDialog = ({ onSale }) => {
       }).toLowerCase()
     });
     
+    // Reset form after sale
     setSelectedItems([]);
     setPaymentMethod("");
   };
 
   return (
     <div className="space-y-6">
+      {/* Search Input Section */}
       <div className="relative">
         <Input
             className="focus-visible:ring-teal-500 py-6"
@@ -127,6 +170,7 @@ const InventorySalesDialog = ({ onSale }) => {
           onFocus={() => setShowResults(true)}
         />
         
+        {/* Search Results Dropdown */}
         {showResults && searchTerm && (
           <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
             <div className="py-1">
@@ -155,6 +199,7 @@ const InventorySalesDialog = ({ onSale }) => {
         )}
       </div>
 
+      {/* Selected Items List */}
       <div className="space-y-4">
         {selectedItems.map((item) => (
           <div key={item.id} className="flex items-center justify-between">
@@ -191,9 +236,13 @@ const InventorySalesDialog = ({ onSale }) => {
                 >
                 <Plus className="h-4 w-4" />
               </Button>
+
+              {/* Item total price */}
               <div className="w-28 text-right">
                 GH₵{(item.quantity * item.unitPrice).toFixed(2)}
               </div>
+
+              {/* Delete item button */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -209,6 +258,7 @@ const InventorySalesDialog = ({ onSale }) => {
         ))}
       </div>
 
+      {/* Order Summary and Payment Section */}
       {selectedItems.length > 0 && (
         <>
           <div className="flex flex-col gap-6">
@@ -216,20 +266,20 @@ const InventorySalesDialog = ({ onSale }) => {
               <span style={{ fontSize: "20px" , fontWeight: "400" }}>Total</span>
               <span style={{ fontSize: "24px" , fontWeight: "600" }}>GH₵{totalAmount.toFixed(2)}</span>
             </div>
+
+            {/* Payment Method Selection */}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">Payment Method</Label>
-              <Select value={paymentMethod} onValueChange={setPaymentMethod} >
-                <SelectTrigger className="w-full py-6 focus:ring-teal-500">
-                  <SelectValue placeholder="Select payment method" />
-                </SelectTrigger>
-                <SelectContent >
-                  {paymentMethods.map((method) => (
-                    <SelectItem key={method.id} value={method.id} className="px-3 py-3">
-                      {method.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {paymentMethods.map((method) => (
+                  <PaymentMethodCard
+                    key={method.id}
+                    method={method}
+                    selected={paymentMethod === method.id}
+                    onSelect={setPaymentMethod}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 

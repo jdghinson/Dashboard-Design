@@ -8,10 +8,6 @@ import {
   Plus
 } from "lucide-react";
 import { Button } from "./components/ui/button";
-import { Label } from "./components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert"
-import { Input } from "./components/ui/input";
-import { InfoIcon } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,30 +71,6 @@ export default function Page() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  // Selling an item
-  const [itemName, setItemName] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const unitPrice = 20; // Example unit price
-  const totalPrice = unitPrice * quantity;
-
-  const handleRecordSale = () => {
-    alert(`Recorded sale for ${itemName} - Quantity: ${quantity}, Total Price: $${totalPrice}`);
-    setItemName("");
-    setQuantity(1);
-  };
-
-  // Currency formatter
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-GH', {
-      style: 'currency',
-      currency: 'GHS',
-      minimumFractionDigits: 2,  // Always show 2 decimal places
-      maximumFractionDigits: 2,  // Maximum of 2 decimal places
-      useGrouping: true          // This enables the thousand separators
-    }).format(amount)
-  }
-
 
 
   return (
